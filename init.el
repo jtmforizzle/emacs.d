@@ -133,7 +133,7 @@
    ("C-S-k" . windmove-up)
    ("C-S-j" . windmove-down)))
 
-(use-package monokai-theme
+(use-package zenburn-theme
   :config
   (set-face-attribute 'default nil :height 115))
 

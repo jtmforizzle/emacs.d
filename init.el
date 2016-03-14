@@ -64,6 +64,12 @@
   :init
   (setq evil-magit-use-y-for-yank t))
 
+(use-package exec-path-from-shell
+  :init
+  (setq exec-path-from-shell-variables '("PATH" "NDK"))
+  :config
+  (exec-path-from-shell-initialize))
+
 (use-package gtags
   :init
   (setq gtags-suggested-key-mapping t))
@@ -129,7 +135,7 @@
 
 (use-package monokai-theme
   :config
-  (set-face-attribute 'default nil :height 125))
+  (set-face-attribute 'default nil :height 115))
 
 ;;
 ;; Editing settings
@@ -154,3 +160,10 @@
 
 ;; use system clipboard for cut and paste
 (setq x-select-enable-clipboard nil)
+
+;; os x key bindings
+(when (eq system-type 'darwin) ;; mac specific settings
+  (setq mac-option-modifier 'alt)
+  (setq mac-command-modifier 'meta)
+  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+  )

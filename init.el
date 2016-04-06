@@ -154,16 +154,20 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "<f7>")  'compile)
 
-;; Mimic gnome-terminal
-(global-set-key (kbd "C-S-v") 'x-clipboard-yank)
-(global-set-key (kbd "C-S-c") 'clipboard-kill-ring-save)
+(when (eq system-type 'linux)
+   ;; Mimic gnome-terminal
+   (global-set-key (kbd "C-S-v") 'x-clipboard-yank)
+   (global-set-key (kbd "C-S-c") 'clipboard-kill-ring-save)
 
-;; use system clipboard for cut and paste
-(setq x-select-enable-clipboard nil)
+   ;; Use system clipboard for cut and paste
+   (setq x-select-enable-clipboard nil)
+
 
 ;; os x key bindings
 (when (eq system-type 'darwin) ;; mac specific settings
   (setq mac-option-modifier 'alt)
   (setq mac-command-modifier 'meta)
   (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+  (global-set-key (kbd "M-c") 'clipboard-kill-ring-save)
+  (global-set-key (kbd "M-v") 'clipboard-yank)
   )

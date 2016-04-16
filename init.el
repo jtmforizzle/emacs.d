@@ -137,6 +137,44 @@
   :config
   (set-face-attribute 'default nil :height 115))
 
+
+(if (file-exists-p (expand-file-name "~/.opam"))
+    (progn
+      ;; Setup environment variables using opam
+      (dolist (var (car (read-from-string
+                         (shell-command-to-string "opam config env --sexp"))))
+        (setenv (car var) (cadr var)))
+
+      ;; Update the emacs path
+      (setq exec-path (append (parse-colon-path (getenv "PATH"))
+                              (list exec-directory)))
+
+      ;; Update the emacs load path
+      (add-to-list 'load-path
+                   (expand-file-name "../../share/emacs/site-lisp"
+                                     (getenv "OCAML_TOPLEVEL_PATH")))
+
+      (use-package tuareg
+        :config
+        (add-hook 'tuareg-mode-hook 'utop-minor-mode)
+        (add-hook 'tuareg-mode-hook 'merlin-mode))
+
+      ;; utop
+      (use-package utop
+        :ensure t
+        :config
+        (autoload 'utop "utop" "Toplevel for OCaml" t)
+        (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
+        )
+
+      ;; merlin
+      (use-package merlin
+        :config
+        (add-hook 'tuareg-mode-hook 'merlin-mode t)
+        (setq merlin-command 'opam))
+      ))
+
+
 ;;
 ;; Editing settings
 ;;
@@ -154,13 +192,13 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "<f7>")  'compile)
 
-(when (eq system-type 'linux)
+(when (eq system-type 'gnu/linux)
    ;; Mimic gnome-terminal
    (global-set-key (kbd "C-S-v") 'x-clipboard-yank)
    (global-set-key (kbd "C-S-c") 'clipboard-kill-ring-save)
 
    ;; Use system clipboard for cut and paste
-   (setq x-select-enable-clipboard nil)
+   (setq x-select-enable-clipboard nil))
 
 
 ;; os x key bindings

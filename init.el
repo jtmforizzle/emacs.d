@@ -13,8 +13,8 @@
 (setq package-enable-at-startup nil)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
-	("marmalade" . "http://marmalade-repo.org/packages/")
-	("melpa" . "http://melpa.org/packages/")))
+		("marmalade" . "http://marmalade-repo.org/packages/")
+		("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
 ;; Bootstrap the use-package install process
@@ -64,15 +64,6 @@
   :init
   (setq evil-magit-use-y-for-yank t))
 
-(use-package exec-path-from-shell
-  :init
-  (setq exec-path-from-shell-variables '("PATH" "NDK"))
-  :config
-  (exec-path-from-shell-initialize))
-
-(use-package gtags
-  :init
-  (setq gtags-suggested-key-mapping t))
 
 ;; for incremental completeness and selection narrowing
 (use-package helm)
@@ -138,6 +129,21 @@
   (set-face-attribute 'default nil :height 115))
 
 
+;; These packages are ignored on windows
+(unless (eq system-type 'windows-nt)
+  (use-package exec-path-from-shell
+    :init
+    (setq exec-path-from-shell-variables '("PATH" "NDK"))
+    :config
+    (exec-path-from-shell-initialize))
+
+  (use-package gtags
+    :init
+    (setq gtags-suggested-key-mapping t))
+)
+
+
+;; Only set up ocaml stuff if it's installed
 (if (file-exists-p (expand-file-name "~/.opam"))
     (progn
       ;; Setup environment variables using opam
@@ -192,6 +198,9 @@
 ;;
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "<f7>")  'compile)
+
+(when (eq system-type 'windows-nt)
+	(set-face-attribute 'default nil :family "Consolas" :height 115))
 
 (when (eq system-type 'gnu/linux)
    ;; Mimic gnome-terminal
